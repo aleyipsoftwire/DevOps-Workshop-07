@@ -1,0 +1,35 @@
+# Here we specify what causes the pipeline to run; in this case changes to any branch
+trigger:
+- '*'
+
+# Here we specify what type of machine (agent) to run on
+pool:
+  vmImage: 'ubuntu-latest'
+
+# And here we specify a list of 'jobs'
+jobs:
+  - job: buildDotNet
+    displayName: 'Build and test dotnet'
+    steps:
+      - task: DotNetCoreCLI@2
+        inputs:
+          command: 'build'
+        displayName: 'Build dotnet'
+      - script: 'dotnet test'
+        displayName: 'Run dotnet tests'
+
+  - job: buildNode
+    displayName: 'Build and test node'
+    steps:
+      - task: UseNode@1
+        inputs:
+          version: '20.x'
+        displayName: 'Set up Node'
+      - script: |
+          npm ci
+          npm run build
+          npm run lint
+          npm t
+        workingDirectory: 'DotnetTemplate.Web'
+        displayName: 'Run npm scripts'
+
