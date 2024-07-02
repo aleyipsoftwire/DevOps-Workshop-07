@@ -1,0 +1,44 @@
+name: Continuous Integration
+on: [push]
+
+jobs:
+  build-dotnet:
+    name: Build and test dotnet
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup dotnet
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "6.0.x"
+      - name: Display dotnet version
+        run: dotnet --version
+      - name: Install dependencies
+        run: dotnet restore
+      - name: Build
+        run: dotnet build
+      - name: Test with the dotnet CLI
+        run: dotnet test
+
+  build-node:
+    name: Build and test node
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./DotnetTemplate.Web
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install node modules
+        run: npm ci
+      - name: Build web
+        run: npm run build
+      - name: Lint web
+        run: npm run lint
+      - name: Test web
+        run: npm t
