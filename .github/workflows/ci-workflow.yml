@@ -63,7 +63,7 @@ jobs:
         with:
           push: true
           tags: aleyipsoftwire/workshop-m9
-          # - name: Release to Azure
-          #   env:
-          #     AZURE_WEBHOOK: ${{ secrets.AZURE_WEBHOOK }}
-          #   run: curl -X POST "$AZURE_WEBHOOK"
+      - name: Release to Azure
+        env:
+          AZURE_WEBHOOK: ${{ secrets.AZURE_WEBHOOK }}
+        run: curl -X POST "$AZURE_WEBHOOK"
